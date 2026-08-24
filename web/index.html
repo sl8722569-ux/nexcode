@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEXCODE — Cross-device editor</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-32.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="theme-color" content="#181818" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="brand-btn" id="btn-palette" title="Command palette (Ctrl+Shift+P)"><img class="logo" src="icon-32.png" alt=""></button>
+      <nav class="menu">
+        <div class="drop">
+          <button type="button">File</button>
+          <div class="fly">
+            <div data-cmd="open">Open File… <span class="kbd">Ctrl+O</span></div>
+            <div data-cmd="sessions">Sessions Hub</div>
+            <div data-cmd="pair">Pair device (this browser)</div>
+          </div>
+        </div>
+        <div class="drop">
+          <button type="button">Edit</button>
+          <div class="fly">
+            <div data-cmd="conflict">Simulate save conflict (demo)</div>
+          </div>
+        </div>
+        <div class="drop">
+          <button type="button">View</button>
+          <div class="fly">
+            <div data-cmd="sessions">Sessions</div>
+            <div data-cmd="mobile">Mobile view</div>
+            <div data-cmd="palette">Command Palette <span class="kbd">Ctrl+Shift+P</span></div>
+          </div>
+        </div>
+        <button type="button" data-cmd="sessions">Sessions</button>
+        <button type="button" data-cmd="git">Source</button>
+      </nav>
+    </div>
+    <div class="searchchip" id="searchchip">Search NEXCODE workspace (Ctrl+Shift+P)</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="seg">
+        <button type="button" id="btn-host" class="on">Host</button>
+        <button type="button" id="btn-mobile">Mobile</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <div class="desktop" style="display:flex;flex:1;min-width:0">
+      <aside class="activity">
+        <div>
+          <button type="button" data-tab="explorer" class="on" title="Explorer">📁</button>
+          <button type="button" data-tab="search" title="Search">🔎</button>
+          <button type="button" data-tab="git" title="Source">⎇</button>
+          <button type="button" data-tab="debug" title="Run">▶</button>
+          <button type="button" data-tab="ai" title="AI lab">✦</button>
+          <button type="button" data-tab="sessions" title="Sessions">⏱</button>
+        </div>
+        <div>
+          <button type="button" data-cmd="pair" title="Pairing">⚙</button>
+        </div>
+      </aside>
+      <aside class="drawer">
+        <h3><span id="drawer-title">EXPLORER</span> <span class="badge" id="host-badge">Host</span></h3>
+        <div class="drawer-body" id="drawer"></div>
+      </aside>
+      <section class="main">
+        <div class="banner hidden" id="banner">
+          <span id="banner-text">Session handoff</span>
+          <span>
+            <button type="button" id="banner-jump">Jump</button>
+            <button type="button" id="banner-x">✕</button>
+          </span>
+        </div>
+        <div class="tabs">
+          <div class="tab on" data-canvas="home" id="tab-home">Welcome</div>
+          <div class="tab" data-canvas="editor" id="tab-file">app.js</div>
+        </div>
+        <div class="canvas">
+          <div class="welcome" id="home">
+            <p><img src="icon-64.png" width="56" height="56" alt="" style="border-radius:12px;opacity:.9" /></p>
+            <h1>NEXCODE</h1>
+            <p class="muted">Cross-device editor · INSAN CREATIONS Early Access. Files stay in this browser. Pairing is a second view on the same machine until a real sync backend exists.</p>
+            <div class="shortcut" data-cmd="ai"><span>Open AI chat</span><span><span class="key">Ctrl</span> <span class="key">Alt</span> <span class="key">I</span></span></div>
+            <div class="shortcut" data-cmd="palette"><span>Show all commands</span><span><span class="key">Ctrl</span> <span class="key">Shift</span> <span class="key">P</span></span></div>
+            <div class="shortcut" data-cmd="sessions"><span>Open sessions timeline</span><span><span class="key">Ctrl</span> <span class="key">R</span></span></div>
+            <div class="shortcut" data-cmd="open"><span>Open file</span><span><span class="key">Ctrl</span> <span class="key">O</span></span></div>
+            <div class="shortcut" data-cmd="explorer"><span>Explorer</span><span><span class="key">Ctrl</span> <span class="key">Shift</span> <span class="key">E</span></span></div>
+          </div>
+          <div class="editor-wrap hidden" id="editor">
+            <div class="gutter" id="gutter">1</div>
+            <textarea class="code" id="code" spellcheck="false"></textarea>
+          </div>
+        </div>
+        <div class="term" id="term">
+          <div class="term-bar"><span>TERMINAL · demo shell</span><button type="button" id="term-toggle">Hide</button></div>
+          <div class="term-out" id="term-out"></div>
+          <form class="term-in" id="term-f"><span>nexcode:~$</span><input id="term-in" autocomplete="off" /></form>
+        </div>
+      </section>
+    </div>
+    <div class="mobile" id="mobile">
+      <div class="mobile-top">
+        <strong>NEXCODE · Mobile view</strong>
+        <button type="button" id="mob-host">Back to Host</button>
+      </div>
+      <p class="note">Same project, smaller chrome. Edits sync through this browser’s storage — not a second physical phone yet.</p>
+      <select id="mob-file"></select>
+      <textarea id="mob-code" spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <footer class="status">
+    <span id="status-l">NEXCODE Early Access · local files</span>
+    <span id="status-r">Ln 1 · UTF-8</span>
+  </footer>
+
+  <div class="overlay hidden" id="palette-wrap">
+    <div class="palette">
+      <input id="palette-q" placeholder="Type a command…" />
+      <div class="plist" id="palette-list"></div>
+    </div>
+  </div>
+  <div class="overlay hidden" id="pair-wrap">
+    <div class="modal" style="padding:14px">
+      <h3 style="margin:0 0 8px">Device pairing (demo)</h3>
+      <p class="muted">Early Access uses one browser. Code below identifies this workspace. A real phone connection needs a backend later.</p>
+      <p>Pair code: <b id="pair-code">------</b></p>
+      <p><button type="button" id="pair-copy">Copy</button> <button type="button" id="pair-close">Close</button></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="https://sl8722569-ux.github.io/insan-creations/js/stats.js" data-app="nexcode"></script>
+</body>
+</html>
