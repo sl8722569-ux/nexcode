@@ -1,6 +1,6 @@
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open("nexcode-ea1").then((c) => c.addAll([
-    "./", "./index.html", "./styles.css", "./app.js", "./manifest.json"
+  e.waitUntil(caches.open("nexcode-ea2").then((c) => c.addAll([
+    "./", "./index.html", "./styles.css", "./app.js", "./bridge-client.js", "./manifest.json"
   ])));
 });
 self.addEventListener("fetch", (e) => {
